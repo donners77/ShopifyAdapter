@@ -68,8 +68,8 @@ namespace ShopifyClientApp
         private void Shop_AddProduct()
         {
             Product p = new Product();
-            p.title = "EMC130SGHLSB-34-2-5";
-            p.body_html = "<strong>EMC130SGHLSB-34-2-5 Electriscreen Electrimask Vertical Classic</strong>";
+            p.title = "SNDQ110HFHG4NZX";
+            p.body_html = "Luxus Deluxe Screen Wall Quicksnap [00705]<br>Image Size: 54in x 96in (110.145in diag.)<br>Aspect Ratio 1.78:1<br>Material: FireHawk® G4 -Front Projection Seamless<br>Screen Material OD: 57.25in x 99.25in<br>Frame Overall Dimension: 60.625in x 102.625in<br>Finish: Velux<br>Mounting: New EZ Mount ";
             p.vendor = "Stewart Filmscreen";
             p.product_type = "projector screen";
             

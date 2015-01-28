@@ -110,15 +110,16 @@ namespace ShopifyAdapter
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.Default.GetBytes(_apikey + ":" + _password)));
 
-                Dictionary<string, string> p = new Dictionary<string, string>();
-                p.Add("title", ShopifyProduct.title);
-                p.Add("body_html", ShopifyProduct.body_html);
-                p.Add("vendor", ShopifyProduct.vendor);
-                p.Add("product_type", ShopifyProduct.product_type);
+                Dictionary<string, string> dictProduct = new Dictionary<string, string>();
+                dictProduct.Add("title", ShopifyProduct.title);
+                dictProduct.Add("body_html", ShopifyProduct.body_html);
+                dictProduct.Add("vendor", ShopifyProduct.vendor);
+                dictProduct.Add("product_type", ShopifyProduct.product_type);
+                dictProduct.Add("published", "false");
 
-                string prod = "{ \"product\": " + JsonConvert.SerializeObject(p) + "}";
+                StringContent p = new StringContent("{\"product\": " + JsonConvert.SerializeObject(dictProduct) + "}", Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = client.PostAsync("admin/products.json", new StringContent(prod, Encoding.UTF8, "application/json")).Result;
+                HttpResponseMessage response = client.PostAsync("admin/products.json", p).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     Product newProduct = Newtonsoft.Json.JsonConvert.DeserializeObject<Product>(response.Content.ReadAsStringAsync().Result);
