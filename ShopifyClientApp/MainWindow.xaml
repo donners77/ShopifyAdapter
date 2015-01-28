@@ -1,0 +1,16 @@
+﻿<Window x:Class="ShopifyClientApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Button x:Name="btnGetData" Content="Make the Call" HorizontalAlignment="Left" Margin="410,19,0,0" VerticalAlignment="Top" Width="97" Click="btnGetData_Click"/>
+        <TextBox x:Name="txtResult" HorizontalAlignment="Left" Height="122" Margin="10,120,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="497" VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True"/>
+        <ComboBox x:Name="cmbCategory" HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.35,-0.955">
+            <ComboBoxItem Content="Get Products" IsSelected="True"/>
+            <ComboBoxItem Content="Get Orders"/>
+            <ComboBoxItem Content="Add Product"/>
+        </ComboBox>
+        <TextBox x:Name="txtFilter" HorizontalAlignment="Left" Height="23" Margin="161,19,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="223" RenderTransformOrigin="0.742,-0.043"/>
+
+    </Grid>
+</Window>
