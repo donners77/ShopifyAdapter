@@ -39,6 +39,7 @@ namespace ShopifyAdapter
         public List<Product> GetProducts()
         {
             List<Product> allProducts = new List<Product>();
+            string endpointURI = "admin/products.json";
 
             using (HttpClient client = new HttpClient())
             {
@@ -47,7 +48,7 @@ namespace ShopifyAdapter
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.Default.GetBytes(_apikey+ ":" + _password)));
 
-                HttpResponseMessage response = client.GetAsync("admin/products.json").Result;
+                HttpResponseMessage response = client.GetAsync(endpointURI).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     Products o = Newtonsoft.Json.JsonConvert.DeserializeObject<Products>(response.Content.ReadAsStringAsync().Result);
@@ -68,6 +69,7 @@ namespace ShopifyAdapter
         public List<ShopifyOrder> GetOrders()
         {
             List<ShopifyOrder> allOrders = new List<ShopifyOrder>();
+            string endpointURI = "admin/orders.json";
 
             using (HttpClient client = new HttpClient())
             {
@@ -76,7 +78,7 @@ namespace ShopifyAdapter
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.Default.GetBytes(_apikey + ":" + _password)));
 
-                HttpResponseMessage response = client.GetAsync("admin/orders.json").Result;
+                HttpResponseMessage response = client.GetAsync(endpointURI).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     Orders o = Newtonsoft.Json.JsonConvert.DeserializeObject<Orders>(response.Content.ReadAsStringAsync().Result);
@@ -102,6 +104,7 @@ namespace ShopifyAdapter
         public int AddProduct(Product ShopifyProduct)
         {
             int productID = 000;
+            string endpointURI = "admin/products.json";
 
             using (HttpClient client = new HttpClient())
             {
@@ -119,7 +122,7 @@ namespace ShopifyAdapter
 
                 StringContent p = new StringContent("{\"product\": " + JsonConvert.SerializeObject(dictProduct) + "}", Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = client.PostAsync("admin/products.json", p).Result;
+                HttpResponseMessage response = client.PostAsJsonAsync(endpointURI, p).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     Product newProduct = Newtonsoft.Json.JsonConvert.DeserializeObject<Product>(response.Content.ReadAsStringAsync().Result);
@@ -134,8 +137,26 @@ namespace ShopifyAdapter
         public int UpdateProduct(Product ShopifyProduct)
         {
             int productID = 0000;
+            string endpointURI = String.Format("admin/products/#{0}.json", ShopifyProduct.id);
 
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(String.Format("https://{0}.myshopify.com/", _storename));
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.Default.GetBytes(_apikey + ":" + _password)));
 
+                StringContent jsondata = new StringContent("{\"product\": " + JsonConvert.SerializeObject(ShopifyProduct) + "}", Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = client.PutAsJsonAsync(endpointURI, jsondata).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    Product newProduct = Newtonsoft.Json.JsonConvert.DeserializeObject<Product>(response.Content.ReadAsStringAsync().Result);
+                    productID = newProduct.id;
+                }
+                else
+                    productID = (int)response.StatusCode;
+            }
             return productID;
         }
 
