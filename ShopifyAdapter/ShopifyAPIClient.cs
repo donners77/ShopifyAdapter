@@ -36,6 +36,32 @@ namespace ShopifyAdapter
             this._password = Password;
         }
 
+        public Product GetProduct(string ProductID)
+        {
+            Product p = new Product();
+            string endpointURI = String.Format("admin/products/{0}.json", ProductID);
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(String.Format("https://{0}.myshopify.com/", _storename));
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.Default.GetBytes(_apikey + ":" + _password)));
+
+                HttpResponseMessage response = client.GetAsync(endpointURI).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    p = Newtonsoft.Json.JsonConvert.DeserializeObject<Product>(response.Content.ReadAsStringAsync().Result);
+                }
+                else
+                {
+                    p.id = (int)response.StatusCode;
+                    p.title = response.ReasonPhrase;
+                }
+            }
+            return p;
+        }
+
         public List<Product> GetProducts()
         {
             List<Product> allProducts = new List<Product>();
@@ -137,7 +163,7 @@ namespace ShopifyAdapter
         public int UpdateProduct(Product ShopifyProduct)
         {
             int productID = 0000;
-            string endpointURI = String.Format("admin/products/#{0}.json", ShopifyProduct.id);
+            string endpointURI = String.Format("admin/products/{0}.json", ShopifyProduct.id);
 
             using (HttpClient client = new HttpClient())
             {
@@ -158,6 +184,25 @@ namespace ShopifyAdapter
                     productID = (int)response.StatusCode;
             }
             return productID;
+        }
+
+        public int DeleteProduct(string ProductID)
+        {
+            int success = 0;
+            string endpointURI = String.Format("admin/products/{0}.json", ProductID);
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(String.Format("https://{0}.myshopify.com/", _storename));
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.Default.GetBytes(_apikey + ":" + _password)));
+
+                HttpResponseMessage response = client.DeleteAsync(endpointURI).Result;
+                success = (int)response.StatusCode;
+            }
+
+            return success;
         }
 
 
