@@ -45,6 +45,10 @@ namespace ShopifyClientApp
                 case "add product":
                     Shop_AddProduct();
                     break;
+                case "get product":
+                    Shop_GetProduct();
+                    break;
+                    
             }
             
         }
@@ -63,6 +67,12 @@ namespace ShopifyClientApp
             {
                 txtResult.Text += String.Format("Order ID: {0} | Created at: {1} | Confirmed: {2}\n", o.id, o.created_at, o.confirmed);
             }
+        }
+
+        private void Shop_GetProduct()
+        {
+            Product p = client.GetProduct(txtFilter.Text);
+            txtResult.Text += String.Format("\nProduct ID: {0} | Product Title: {1}\n", p.id, p.title);
         }
 
         private void Shop_AddProduct()

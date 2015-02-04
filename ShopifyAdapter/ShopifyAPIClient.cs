@@ -51,7 +51,8 @@ namespace ShopifyAdapter
                 HttpResponseMessage response = client.GetAsync(endpointURI).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    p = Newtonsoft.Json.JsonConvert.DeserializeObject<Product>(response.Content.ReadAsStringAsync().Result);
+                    string r = response.Content.ReadAsStringAsync().Result;
+                    p = Newtonsoft.Json.JsonConvert.DeserializeObject<Product>(r);
                 }
                 else
                 {

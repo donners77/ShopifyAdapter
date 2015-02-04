@@ -7,6 +7,7 @@
         <TextBox x:Name="txtResult" HorizontalAlignment="Left" Height="122" Margin="10,120,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="497" VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True"/>
         <ComboBox x:Name="cmbCategory" HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.35,-0.955">
             <ComboBoxItem Content="Get Products" IsSelected="True"/>
+            <ComboBoxItem Content="Get Product"/>
             <ComboBoxItem Content="Get Orders"/>
             <ComboBoxItem Content="Add Product"/>
         </ComboBox>
