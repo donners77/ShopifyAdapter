@@ -134,10 +134,15 @@ namespace ShopifyAdapter
             return productID;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ShopifyProduct"></param>
+        /// <returns></returns>
         public int UpdateProduct(Product ShopifyProduct)
         {
             int productID = 0000;
-            string endpointURI = String.Format("admin/products/#{0}.json", ShopifyProduct.id);
+            string endpointURI = String.Format("admin/products/{0}.json", ShopifyProduct.id);
 
             using (HttpClient client = new HttpClient())
             {
@@ -160,6 +165,28 @@ namespace ShopifyAdapter
             return productID;
         }
 
+        /// <summary>
+        /// Delete a shopify product
+        /// </summary>
+        /// <param name="ProductID"></param>
+        /// <returns>Returns 0 for success, 1 for fail.</returns>
+        public int DeleteProduct(string ProductID)
+        {
+            string endpointURI = String.Format("admin/products/{0}.json", ProductID);
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(String.Format("https://{0}.myshopify.com/", _storename));
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.Default.GetBytes(_apikey + ":" + _password)));
+
+                HttpResponseMessage response = client.DeleteAsync(endpointURI).Result;
+                if (response.IsSuccessStatusCode)
+                    return 0;
+                else
+                    return -1;
+            }
+        }
 
 
         #region "----- Core WEB API Methods -----------"
