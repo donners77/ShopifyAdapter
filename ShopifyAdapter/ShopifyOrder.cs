@@ -344,4 +344,9 @@ namespace ShopifyAdapter
         public List<ShopifyOrder> orders { get; set; }
     }
 
+    public class RootOrder
+    {
+        public ShopifyOrder order { get; set; }
+    }
+
 }

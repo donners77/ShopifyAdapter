@@ -51,8 +51,8 @@ namespace ShopifyAdapter
                 HttpResponseMessage response = client.GetAsync(endpointURI).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    string r = response.Content.ReadAsStringAsync().Result;
-                    p = Newtonsoft.Json.JsonConvert.DeserializeObject<Product>(r);
+                    var rp = Newtonsoft.Json.JsonConvert.DeserializeObject<RootProduct>(response.Content.ReadAsStringAsync().Result);
+                    p = rp.product;
                 }
                 else
                 {
@@ -140,14 +140,18 @@ namespace ShopifyAdapter
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.Default.GetBytes(_apikey + ":" + _password)));
 
-                Dictionary<string, string> dictProduct = new Dictionary<string, string>();
-                dictProduct.Add("title", ShopifyProduct.title);
-                dictProduct.Add("body_html", ShopifyProduct.body_html);
-                dictProduct.Add("vendor", ShopifyProduct.vendor);
-                dictProduct.Add("product_type", ShopifyProduct.product_type);
-                dictProduct.Add("published", "false");
+                //Dictionary<string, string> dictProduct = new Dictionary<string, string>();
+                //dictProduct.Add("title", ShopifyProduct.title);
+                //dictProduct.Add("body_html", ShopifyProduct.body_html);
+                //dictProduct.Add("vendor", ShopifyProduct.vendor);
+                //dictProduct.Add("product_type", ShopifyProduct.product_type);
+                //dictProduct.Add("published", "false");
 
-                StringContent p = new StringContent("{\"product\": " + JsonConvert.SerializeObject(dictProduct) + "}", Encoding.UTF8, "application/json");
+                //StringContent p = new StringContent("{\"product\": " + JsonConvert.SerializeObject(dictProduct) + "}", Encoding.UTF8, "application/json");
+                RootProduct rp = new RootProduct();
+                rp.product = ShopifyProduct;
+
+                StringContent p = new StringContent(JsonConvert.SerializeObject(rp), Encoding.UTF8, "application/json");
 
                 HttpResponseMessage response = client.PostAsJsonAsync(endpointURI, p).Result;
                 if (response.IsSuccessStatusCode)
@@ -173,7 +177,9 @@ namespace ShopifyAdapter
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.Default.GetBytes(_apikey + ":" + _password)));
 
-                StringContent jsondata = new StringContent("{\"product\": " + JsonConvert.SerializeObject(ShopifyProduct) + "}", Encoding.UTF8, "application/json");
+                RootProduct rp = new RootProduct();
+                rp.product = ShopifyProduct;
+                StringContent jsondata = new StringContent(JsonConvert.SerializeObject(rp), Encoding.UTF8, "application/json");
 
                 HttpResponseMessage response = client.PutAsJsonAsync(endpointURI, jsondata).Result;
                 if (response.IsSuccessStatusCode)
@@ -205,7 +211,6 @@ namespace ShopifyAdapter
 
             return success;
         }
-
 
 
         #region "----- Core WEB API Methods -----------"

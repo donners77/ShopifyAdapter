@@ -66,4 +66,9 @@ namespace ShopifyAdapter
         public List<Product> products { get; set; }
     }
 
+    public class RootProduct
+    {
+        public Product product { get; set; }
+    }
+
 }
