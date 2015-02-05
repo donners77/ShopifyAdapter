@@ -8,10 +8,10 @@ namespace ShopifyAdapter
 {
     public class Product
     {
-        public int id { get; set; }
         public string body_html { get; set; }
         public string created_at { get; set; }
         public string handle { get; set; }
+        public int id { get; set; }
         public string product_type { get; set; }
         public string published_at { get; set; }
         public string published_scope { get; set; }

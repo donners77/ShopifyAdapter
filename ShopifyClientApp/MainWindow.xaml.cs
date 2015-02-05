@@ -48,9 +48,20 @@ namespace ShopifyClientApp
                 case "get product":
                     Shop_GetProduct();
                     break;
+                case "update product":
+                    Shop_UpdateProduct();
+                    break;
                     
             }
             
+        }
+
+        private void Shop_UpdateProduct()
+        {
+            Product emc = client.GetProduct("412073932");
+            emc.variants[0].inventory_quantity = 37;
+
+            txtResult.Text = client.UpdateProduct(emc).ToString();
         }
 
         private void Shop_GetProducts()
@@ -78,10 +89,10 @@ namespace ShopifyClientApp
         private void Shop_AddProduct()
         {
             Product p = new Product();
-            p.title = "SNDQ110HFHG4NZX";
-            p.body_html = "Luxus Deluxe Screen Wall Quicksnap [00705]<br>Image Size: 54in x 96in (110.145in diag.)<br>Aspect Ratio 1.78:1<br>Material: FireHawk® G4 -Front Projection Seamless<br>Screen Material OD: 57.25in x 99.25in<br>Frame Overall Dimension: 60.625in x 102.625in<br>Finish: Velux<br>Mounting: New EZ Mount ";
-            p.vendor = "Stewart Filmscreen";
-            p.product_type = "projector screen";
+            p.title = "NL925";
+            p.body_html = "Unlocked Nokia Lumia 925 with Windows Phone.";
+            p.vendor = "Nokia";
+            p.product_type = "mobile phone";
             
             int status = client.AddProduct(p);
             txtResult.Text = status.ToString();

@@ -140,18 +140,17 @@ namespace ShopifyAdapter
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.Default.GetBytes(_apikey + ":" + _password)));
 
-                //Dictionary<string, string> dictProduct = new Dictionary<string, string>();
-                //dictProduct.Add("title", ShopifyProduct.title);
-                //dictProduct.Add("body_html", ShopifyProduct.body_html);
-                //dictProduct.Add("vendor", ShopifyProduct.vendor);
-                //dictProduct.Add("product_type", ShopifyProduct.product_type);
-                //dictProduct.Add("published", "false");
+                Dictionary<string, string> dictProduct = new Dictionary<string, string>();
+                dictProduct.Add("title", ShopifyProduct.title);
+                dictProduct.Add("body_html", ShopifyProduct.body_html);
+                dictProduct.Add("vendor", ShopifyProduct.vendor);
+                dictProduct.Add("product_type", ShopifyProduct.product_type);
+                dictProduct.Add("published", "true");
 
-                //StringContent p = new StringContent("{\"product\": " + JsonConvert.SerializeObject(dictProduct) + "}", Encoding.UTF8, "application/json");
-                RootProduct rp = new RootProduct();
-                rp.product = ShopifyProduct;
-
-                StringContent p = new StringContent(JsonConvert.SerializeObject(rp), Encoding.UTF8, "application/json");
+                StringContent p = new StringContent("{\"product\": " + JsonConvert.SerializeObject(dictProduct) + "}", Encoding.UTF8, "application/json");
+                //RootProduct rp = new RootProduct();
+                //rp.product = ShopifyProduct;
+                //StringContent p = new StringContent(JsonConvert.SerializeObject(rp), Encoding.UTF8, "application/json");
 
                 HttpResponseMessage response = client.PostAsJsonAsync(endpointURI, p).Result;
                 if (response.IsSuccessStatusCode)
@@ -177,9 +176,18 @@ namespace ShopifyAdapter
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.Default.GetBytes(_apikey + ":" + _password)));
 
-                RootProduct rp = new RootProduct();
-                rp.product = ShopifyProduct;
-                StringContent jsondata = new StringContent(JsonConvert.SerializeObject(rp), Encoding.UTF8, "application/json");
+
+                //RootProduct rp = new RootProduct();
+                //rp.product = new Product();
+                //rp.product.variants = new List<Variant>();
+                //Variant v = new Variant();
+                //v.inventory_quantity = 37;
+                //rp.product.id = ShopifyProduct.id;
+                //rp.product.variants.Add(v);
+
+                //string ser = Newtonsoft.Json.JsonConvert.SerializeObject(rp);
+                string ser = "{\"product\":{\"id\":412073932,\"variants\":[{\"product_id\":412073932,\"inventory_quantity\":37}]}}";
+                StringContent jsondata = new StringContent(ser, Encoding.UTF8, "application/json");
 
                 HttpResponseMessage response = client.PutAsJsonAsync(endpointURI, jsondata).Result;
                 if (response.IsSuccessStatusCode)
@@ -193,6 +201,34 @@ namespace ShopifyAdapter
             return productID;
         }
 
+        public int SetProductInventory(string VariantID, int NewInventory)
+        {
+            int productID = 0000;
+            string endpointURI = String.Format("admin/variants/{0}.json", VariantID);
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(String.Format("https://{0}.myshopify.com/", _storename));
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.Default.GetBytes(_apikey + ":" + _password)));
+
+
+                //string ser = Newtonsoft.Json.JsonConvert.SerializeObject(rp);
+                string ser = String.Format("{\"variant\":{\"id\":{0},\"inventory_quantity\":{1}}}", VariantID, NewInventory);
+                StringContent jsondata = new StringContent(ser, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = client.PutAsJsonAsync(endpointURI, jsondata).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    Product newProduct = Newtonsoft.Json.JsonConvert.DeserializeObject<Product>(response.Content.ReadAsStringAsync().Result);
+                    productID = newProduct.id;
+                }
+                else
+                    productID = (int)response.StatusCode;
+            }
+            return productID;
+        }
         public int DeleteProduct(string ProductID)
         {
             int success = 0;

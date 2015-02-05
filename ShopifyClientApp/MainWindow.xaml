@@ -10,6 +10,7 @@
             <ComboBoxItem Content="Get Product"/>
             <ComboBoxItem Content="Get Orders"/>
             <ComboBoxItem Content="Add Product"/>
+            <ComboBoxItem Content="Update Product"/>
         </ComboBox>
         <TextBox x:Name="txtFilter" HorizontalAlignment="Left" Height="23" Margin="161,19,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="223" RenderTransformOrigin="0.742,-0.043"/>
 
