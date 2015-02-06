@@ -51,9 +51,17 @@ namespace ShopifyClientApp
                 case "update product":
                     Shop_UpdateProduct();
                     break;
+                case "set inventory":
+                    Shop_SetInventory();
+                    break;
                     
             }
             
+        }
+
+        private void Shop_SetInventory()
+        {
+            txtResult.Text = client.SetInventory("1128204992", Convert.ToInt16(txtFilter.Text)).ToString();
         }
 
         private void Shop_UpdateProduct()

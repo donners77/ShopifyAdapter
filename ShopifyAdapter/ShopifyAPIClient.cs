@@ -26,16 +26,20 @@ namespace ShopifyAdapter
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="StoreName"></param>
-        /// <param name="APIKey"></param>
-        /// <param name="Password"></param>
+        /// <param name="StoreName">Shopify Store name ([storename].myshopify.com)</param>
+        /// <param name="APIKey">unique API Key from Shopify</param>
+        /// <param name="Password">Password that authorizing private app to access the store admin.</param>
         public ShopifyAPIClient(string StoreName, string APIKey, string Password)
         {
             this._storename = StoreName;
             this._apikey = APIKey;
             this._password = Password;
         }
-
+        /// <summary>
+        /// Get a specific shop product by Product ID
+        /// </summary>
+        /// <param name="ProductID">Store product_id</param>
+        /// <returns></returns>
         public Product GetProduct(string ProductID)
         {
             Product p = new Product();
@@ -62,7 +66,10 @@ namespace ShopifyAdapter
             }
             return p;
         }
-
+        /// <summary>
+        /// Get all store products
+        /// </summary>
+        /// <returns></returns>
         public List<Product> GetProducts()
         {
             List<Product> allProducts = new List<Product>();
@@ -92,7 +99,10 @@ namespace ShopifyAdapter
 
             return allProducts;
         }
-        
+        /// <summary>
+        /// Get all orders
+        /// </summary>
+        /// <returns></returns>
         public List<ShopifyOrder> GetOrders()
         {
             List<ShopifyOrder> allOrders = new List<ShopifyOrder>();
@@ -122,7 +132,6 @@ namespace ShopifyAdapter
 
             return allOrders;
         }
-
         /// <summary>
         /// Add a new product to Shopify store
         /// </summary>
@@ -163,7 +172,11 @@ namespace ShopifyAdapter
             }
             return productID;
         }
-
+        /// <summary>
+        /// Update product
+        /// </summary>
+        /// <param name="ShopifyProduct"></param>
+        /// <returns></returns>
         public int UpdateProduct(Product ShopifyProduct)
         {
             int productID = 0000;
@@ -200,8 +213,13 @@ namespace ShopifyAdapter
             }
             return productID;
         }
-
-        public int SetProductInventory(string VariantID, int NewInventory)
+        /// <summary>
+        /// Set product variant inventory 
+        /// </summary>
+        /// <param name="VariantID"></param>
+        /// <param name="NewInventory"></param>
+        /// <returns></returns>
+        public int SetInventory(string VariantID, int NewInventory)
         {
             int productID = 0000;
             string endpointURI = String.Format("admin/variants/{0}.json", VariantID);
@@ -215,7 +233,7 @@ namespace ShopifyAdapter
 
 
                 //string ser = Newtonsoft.Json.JsonConvert.SerializeObject(rp);
-                string ser = String.Format("{\"variant\":{\"id\":{0},\"inventory_quantity\":{1}}}", VariantID, NewInventory);
+                string ser = "{\"variant\":{\"id\": " + VariantID + ",\"inventory_quantity\": " + NewInventory + "}}";
                 StringContent jsondata = new StringContent(ser, Encoding.UTF8, "application/json");
 
                 HttpResponseMessage response = client.PutAsJsonAsync(endpointURI, jsondata).Result;
@@ -229,6 +247,7 @@ namespace ShopifyAdapter
             }
             return productID;
         }
+        
         public int DeleteProduct(string ProductID)
         {
             int success = 0;

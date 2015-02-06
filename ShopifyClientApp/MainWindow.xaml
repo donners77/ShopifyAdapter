@@ -7,9 +7,10 @@
         <TextBox x:Name="txtResult" HorizontalAlignment="Left" Height="122" Margin="10,120,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="497" VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True"/>
         <ComboBox x:Name="cmbCategory" HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.35,-0.955">
             <ComboBoxItem Content="Get Products" IsSelected="True"/>
-            <ComboBoxItem Content="Get Product"/>
             <ComboBoxItem Content="Get Orders"/>
+            <ComboBoxItem Content="Get Product"/>
             <ComboBoxItem Content="Add Product"/>
+            <ComboBoxItem Content="Set Inventory"/>
             <ComboBoxItem Content="Update Product"/>
         </ComboBox>
         <TextBox x:Name="txtFilter" HorizontalAlignment="Left" Height="23" Margin="161,19,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="223" RenderTransformOrigin="0.742,-0.043"/>
