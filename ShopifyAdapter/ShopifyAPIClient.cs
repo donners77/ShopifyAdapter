@@ -221,7 +221,7 @@ namespace ShopifyAdapter
         /// <returns></returns>
         public int SetInventory(string VariantID, int NewInventory)
         {
-            int productID = 0000;
+            int success = -1;
             string endpointURI = String.Format("admin/variants/{0}.json", VariantID);
 
             using (HttpClient client = new HttpClient())
@@ -231,26 +231,23 @@ namespace ShopifyAdapter
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.Default.GetBytes(_apikey + ":" + _password)));
 
-
-                //string ser = Newtonsoft.Json.JsonConvert.SerializeObject(rp);
-                string ser = "{\"variant\":{\"id\": " + VariantID + ",\"inventory_quantity\": " + NewInventory + "}}";
+                string ser = "{ \"variant\":{ \"id\": " + VariantID + ", \"inventory_quantity\": " + NewInventory + " } }";
                 StringContent jsondata = new StringContent(ser, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = client.PutAsJsonAsync(endpointURI, jsondata).Result;
+                HttpResponseMessage response = client.PutAsync(endpointURI, jsondata).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    Product newProduct = Newtonsoft.Json.JsonConvert.DeserializeObject<Product>(response.Content.ReadAsStringAsync().Result);
-                    productID = newProduct.id;
+                    string resp = response.Content.ReadAsStringAsync().Result;
+                    Variant v = JsonConvert.DeserializeObject<Variant>(resp);
                 }
-                else
-                    productID = (int)response.StatusCode;
+                success = (int)response.StatusCode;
             }
-            return productID;
+            return success;
         }
         
         public int DeleteProduct(string ProductID)
         {
-            int success = 0;
+            int success = -1;
             string endpointURI = String.Format("admin/products/{0}.json", ProductID);
 
             using (HttpClient client = new HttpClient())
